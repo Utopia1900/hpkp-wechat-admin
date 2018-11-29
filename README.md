@@ -1,4 +1,4 @@
-# wxcheck_admin
+# hpkp-wechat-admin
 
 > A Vue.js project
 

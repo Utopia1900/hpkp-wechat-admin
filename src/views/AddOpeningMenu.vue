@@ -107,6 +107,13 @@
               v-model="activity.isLimited"
             ></v-switch>
           </v-list-tile>
+          <v-list-tile>
+            <span style="width: 320px;text-align: left">是否需要发送短信: </span>
+            <v-switch
+                    :label="activity.needSendSms ? '是': '否'"
+                    v-model="activity.needSendSms"
+            ></v-switch>
+          </v-list-tile>
           <v-list-tile><span style="width: 120px;text-align: left">正式时间: </span>
             <ul>
               <li>
@@ -303,6 +310,7 @@
         let roomDesc = JSON.parse(window.sessionStorage.getItem('activity')).roomDesc
         let signDesc = JSON.parse(window.sessionStorage.getItem('activity')).signDesc
         let isLimited = JSON.parse(window.sessionStorage.getItem('activity')).isLimited
+        let needSendSms = JSON.parse(window.sessionStorage.getItem('activity')).needSendSms
         if (name !== this.activity.name) {
           formData.name = this.activity.name
         }
@@ -323,6 +331,9 @@
         }
         if (isLimited !== this.activity.isLimited) {
           formData.isLimited = this.activity.isLimited
+        }
+        if (needSendSms !== this.activity.needSendSms) {
+            formData.needSendSms = this.activity.needSendSms
         }
         console.log(formData)
         let self = this

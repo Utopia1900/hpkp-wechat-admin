@@ -25,7 +25,7 @@
         <textarea name="" id="signDesc" v-model="signDesc" cols="40" rows="5" placeholder="在这里填写..."></textarea>
       </div>
       <div>
-        <label>4. 是否限制一个账户只能购买一套房源</label>
+        <label>5. 是否限制一个账户只能购买一套房源</label>
       </div>
       <div style="margin-left: 5%">
         <v-switch
@@ -33,7 +33,16 @@
           v-model="isLimited"
         ></v-switch>
       </div>
-      <label>5. 设置活动时间</label>
+      <div>
+        <label>6. 是否需要发送短信</label>
+      </div>
+      <div style="margin-left: 5%">
+        <v-switch
+                :label="needSendSms ? '是': '否'"
+                v-model="needSendSms"
+        ></v-switch>
+      </div>
+      <label>7. 设置活动时间</label>
       <!--<h2>手风琴动画效果</h2>-->
       <div style="margin-left: 7%; text-align: left;">
 
@@ -108,6 +117,7 @@
         roomDesc: '',
         signDesc: '',
         isLimited: false,
+        needSendSms: false,
         testTime: [],
         formalTime: {
           start: '',
@@ -229,6 +239,7 @@
             project: this.project,
             title: this.title,
             isLimited: this.isLimited,
+            needSendSms: this.needSendSms,
             formalTime: JSON.stringify(this.formalTime),
             testTime: JSON.stringify(this.testTime)
           }

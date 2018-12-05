@@ -70,21 +70,13 @@
             <v-card style="padding-left: 100px">
                 <h3 style="padding-top: 30px;">查看&nbsp;|&nbsp;修改 &nbsp;活动信息</h3>
                 <v-list>
-                    <v-list-tile><span style="width: 150px;text-align: left">活动名称: </span><input type="text"
-                                                                                                 v-model="activity.name"
-                                                                                                 ref="name">
+                    <v-list-tile><span style="width: 150px;text-align: left">活动名称: </span><input type="text" v-model="activity.name" ref="name">
                     </v-list-tile>
-                    <v-list-tile><span style="width: 150px;text-align: left">活动标题: </span><input type="text"
-                                                                                                 v-model="activity.title"
-                                                                                                 ref="title">
+                    <v-list-tile><span style="width: 150px;text-align: left">活动标题: </span><input type="text" v-model="activity.title" ref="title">
                     </v-list-tile>
-                    <v-list-tile><span style="width: 150px;text-align: left">楼盘所在城市: </span><input type="text"
-                                                                                                   v-model="activity.city"
-                                                                                                   ref="city">
+                    <v-list-tile><span style="width: 150px;text-align: left">楼盘所在城市: </span><input type="text" v-model="activity.city" ref="city">
                     </v-list-tile>
-                    <v-list-tile><span style="width: 150px;text-align: left">楼盘名称: </span><input type="text"
-                                                                                                 v-model="activity.project"
-                                                                                                 ref="project">
+                    <v-list-tile><span style="width: 150px;text-align: left">楼盘名称: </span><input type="text" v-model="activity.project" ref="project">
                     </v-list-tile>
                     <v-list-tile style="height: 100px;margin-top:20px;"><span style="width: 150px;text-align: left">房源描述: </span>
                         <textarea name="" ref="roomDesc" v-model="activity.roomDesc" cols="30" rows="3"
@@ -132,13 +124,11 @@
                         </v-btn>
                     </v-list-tile>
                 </v-list>
-                <v-list>
-                    <v-list-tile><span style="width: 120px;text-align: left">公测时间: </span>
-                        <ul v-for="(item, index) in activity.testTime" :key="index">
-                            <li>{{item.start}} 至 {{item.end}}</li>
-                            <v-btn color="error" flat
-                                   @click="showTimeUpdateDialog('test', item.start, item.end, index)">修改
-                            </v-btn>
+                <v-list style="margin-top: 0px;">
+                    <v-list-tile><span style="width: 200px;text-align: left">公测时间:  <v-btn color="success" flat @click="showTimeUpdateDialog('testAdd')">新增</v-btn></span>
+                        <ul style="position: absolute;display: flex;flex-direction: column;left: 200px;top: 0px;display: flex; flex-direction: column">
+                            <li style="" v-for="(item, index) in activity.testTime" :key="index">{{item.start}} 至 {{item.end}} <v-btn color="error" flat @click="showTimeUpdateDialog('testUpdate', item.start, item.end, index)">修改
+                            </v-btn></li>
                         </ul>
                     </v-list-tile>
                 </v-list>
@@ -307,7 +297,7 @@
 //                            self.showFormal = true
                             self.dateTimeDialog = false
                             break;
-                        case 'test':
+                        case 'testUpdate':
                             /* self.activity.testTime.push({
                              start: self.startTime.time,
                              end: self.endTime.time
@@ -316,6 +306,19 @@
                             self.activity.testTime[self.testTimeIndex].end = self.endTime.time
 //                            self.showTest = true
                             self.dateTimeDialog = false
+                            break;
+                        case 'testAdd':
+                            let start = self.startTime.time
+                            let end = self.endTime.time
+                            if (start == '' || end == '') {
+                                alert('请设置起始终时间和结束时间')
+                            }else {
+                                self.activity.testTime.push({
+                                    start: start,
+                                    end: end
+                                })
+                                self.dateTimeDialog = false
+                            }
                             break;
                     }
                 }
@@ -328,12 +331,18 @@
                         this.startTime.time = start
                         this.endTime.time = end
                         break;
-                    case 'test':
-                        this.timeType = 'test'
+                    case 'testUpdate':
+                        this.timeType = 'testUpdate'
                         this.dateTimeDialog = true
                         this.startTime.time = start
                         this.endTime.time = end
                         this.testTimeIndex = index
+                        break;
+                    case 'testAdd':
+                        this.timeType = 'testAdd'
+                        this.dateTimeDialog = true
+                        this.startTime.time = ''
+                        this.endTime.time = ''
                         break;
                 }
             },
@@ -440,6 +449,9 @@
             },
             updateActivity () {
                 this.submitUpdateDialog = true
+            },
+            addTest () {
+
             },
             submitUpdate () {
                 let formData = {

@@ -1,7 +1,7 @@
 <template>
-  <v-container>
-    <v-layout row wrap>
-      <v-flex xs12 offset-xs0>
+  <div>
+    <v-layout>
+      <div style="width: 400px;margin: 15% auto">
         <v-card class="cardBg">
           <h2 style="padding-top:15px">【在线选房】公众号管理后台</h2>
           <v-form ref="form" v-model="valid" lazy-validation style="padding:15px">
@@ -21,18 +21,18 @@
             </v-btn>
           </v-form>
         </v-card>
-      </v-flex>
+      </div>
+      <v-dialog v-model="addMenuDialog" max-width="600px">
+        <v-card style="padding-top: 30px;">
+          {{errmsg}}
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="error" flat @click.native="addMenuDialog = false">关闭</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
     </v-layout>
-    <v-dialog v-model="addMenuDialog" max-width="600px">
-      <v-card style="padding-top: 30px;">
-        {{errmsg}}
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="error" flat @click.native="addMenuDialog = false">关闭</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-  </v-container>
+  </div>
 </template>
 <script>
   import config from '../utils/config.js'

@@ -19,12 +19,11 @@
                             </li>
                         </ul>
                     </td>
-                    <!--<td class="text-xs-center">-->
-                    <!--<ul v-for="(item, index) in props.item.testTime">-->
-                    <!--<li>开始：{{item.start}}</li>-->
-                    <!--<li>结束：{{item.end}}</li>-->
-                    <!--</ul>-->
-                    <!--</td>-->
+                    <td class="text-xs-center">
+                    <ul v-for="(item, index) in props.item.testTime">
+                    <li>{{item.start}}&nbsp;&nbsp;至&nbsp;&nbsp;{{item.end}}</li>
+                    </ul>
+                    </td>
                     <td class="text-xs-center">
                         <v-btn color="error" @click="showActivity(props.item)">查看&nbsp;|&nbsp;修改</v-btn>
                         <v-btn color="info" @click="addOpeningMenu(props.item.id)">添加开盘菜单</v-btn>
@@ -213,8 +212,8 @@
                 {text: '活动名称', align: 'center', value: 'name', sortable: false},
                 {text: '楼盘名称', align: 'center', value: 'createTime', sortable: false},
                 {text: '是否限购', align: 'center', value: 'isLimited', sortable: false},
-                {text: '活动正式时间', align: 'center', value: 'formalTime', sortable: false},
-//        {text: '测试时间', align: 'center', value: 'testTime', sortable: false},
+                {text: '正式时间', align: 'center', value: 'formalTime', sortable: false},
+                {text: '公测时间', align: 'center', value: 'testTime', sortable: false},
                 {text: '操作', align: 'center', value: 'id', sortable: false}
             ],
             desserts: [],
@@ -518,7 +517,7 @@
             },
             goToManageActivity (activityId, name) {
                 let token = sessionStorage.getItem('token')
-                window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}`, '_blank')
+                window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin`, '_blank')
             }
         },
         mounted() {

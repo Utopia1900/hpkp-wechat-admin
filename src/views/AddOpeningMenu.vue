@@ -529,7 +529,8 @@
             },
             goToManageActivity (activityId, name) {
                 let token = sessionStorage.getItem('token')
-                window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin`, '_blank')
+//                window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin`, '_blank')
+                window.open(`/suAdmin/manage/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin`, '_blank')
             }
         },
         mounted() {

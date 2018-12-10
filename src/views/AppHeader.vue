@@ -46,8 +46,8 @@
     data() {
       return {
         drawer: null,
-        currentMenuActived: true,
-        openingMenuActived: false,
+        currentMenuActived: false,
+        openingMenuActived: true,
         createActivityActived: false
       }
     },

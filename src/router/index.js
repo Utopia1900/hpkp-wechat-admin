@@ -19,7 +19,7 @@ export default new Router({
       path: '/home',
       name: '首页',
       component: AppHome,
-      redirect: '/home/currentMenuInfo',
+      redirect: '/home/addOpeningMenu',
       children: [
         {
           path: '/home/currentMenuInfo',

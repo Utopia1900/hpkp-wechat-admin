@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3 style="height: 40px; line-height: 40px; background-color: #fff;">创建活动</h3>
-        <v-card style="padding: 30px;">
+        <v-card>
             <div>
                 <label for="name">1. 活动信息(必填)<span style="color: red">*</span> <span style="color: red">注意：活动名称只能为字母或者数字的组合，例如 wkkp1、whld2</span></label>
                 <div style="display: flex; flex-direction: row; margin-left: 5%; width: 90%">
@@ -78,12 +78,16 @@
             <v-card style="padding-top: 30px;background: #fff;color: #000; height: 500px;">
                 设置开始和结束时间
                 <v-card-title style="height: 200px;margin: 20px auto;">
-                    <div style="margin: 0 auto;">
-                        <date-picker :date="startTime" :option="startOption" :limit="startLimit"
-                                     style="border: 1px solid #ccc;"></date-picker>
-                        <span>&nbsp;&nbsp;至&nbsp;&nbsp;</span>
-                        <date-picker :date="endTime" :option="endOption" :limit="endLimit"
-                                     style="border: 1px solid #ccc;"></date-picker>
+                    <div style="display: flex;flex-direction: column;width: 100%;">
+                        <div style="margin-bottom: 8px;">
+                            开始：
+                            <date-picker :date="startTime" :option="startOption" :limit="startLimit"
+                                         style="border: 1px solid #ccc;"></date-picker>
+                        </div>
+                        <div>结束：
+                            <date-picker :date="endTime" :option="endOption" :limit="endLimit"
+                                         style="border: 1px solid #ccc;"></date-picker>
+                        </div>
                     </div>
                 </v-card-title>
                 <v-card-actions>
@@ -101,7 +105,6 @@
     import axios from 'axios'
     import moment from 'moment'
     import myDatepicker from 'vue-datepicker/vue-datepicker-es6.vue'
-    import Util from '../utils/Util'
     export default {
         name: "create-activity",
         data () {
@@ -276,24 +279,17 @@
 //              alert(error)
                     })
                 }
-            }
+            },
+            formatDate(date) {
+                let parseDate = Date.parse(date)
+                let reqDate = (new Date(parseDate)).FormatDate('yyyy-MM-dd')
+                return reqDate
+            },
         },
         mounted () {
-            let self = this
-            let today = Util.datetimeFormat(new Date(), 'yyyy-MM-dd')
-//      this.startTime.time = today + ' 00:00'
-//      this.endTime.time = today + ' 23:59'
-            this.$watch('startTime.time', (newVal, oldVal) => {
-                let starttmp = new Date(newVal.replace(' ', 'T'))
-                starttmp.setDate(starttmp.getDate() - 1)
-                let start = Util.datetimeFormat(starttmp, 'yyyy-MM-dd hh:mm')
-                self.endLimit[0].from = start
-            })
-            this.$watch('endTime.time', (newVal, oldVal) => {
-                let endtmp = new Date(newVal.replace(' ', 'T'))
-                let end = Util.datetimeFormat(endtmp, 'yyyy-MM-dd hh:mm')
-                self.startLimit[0].to = end
-            })
+            let tmp = new Date()
+            tmp.setDate(tmp.getDate() - 1)
+            this.startLimit[0].from = this.endLimit[0].from = this.formatDate(tmp)
         }
     }
 </script>

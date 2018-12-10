@@ -20,9 +20,9 @@
                         </ul>
                     </td>
                     <td class="text-xs-center">
-                    <ul v-for="(item, index) in props.item.testTime">
-                    <li>{{item.start}}&nbsp;&nbsp;至&nbsp;&nbsp;{{item.end}}</li>
-                    </ul>
+                        <ul v-for="(item, index) in props.item.testTime">
+                            <li>{{item.start}}&nbsp;&nbsp;至&nbsp;&nbsp;{{item.end}}</li>
+                        </ul>
                     </td>
                     <td class="text-xs-center">
                         <v-btn color="error" @click="showActivity(props.item)">查看&nbsp;|&nbsp;修改</v-btn>
@@ -70,13 +70,21 @@
             <v-card style="padding-left: 100px">
                 <h3 style="padding-top: 30px;">查看&nbsp;|&nbsp;修改 &nbsp;活动信息</h3>
                 <v-list>
-                    <v-list-tile><span style="width: 150px;text-align: left">活动名称: </span><input type="text" v-model="activity.name" ref="name">
+                    <v-list-tile><span style="width: 150px;text-align: left">活动名称: </span><input type="text"
+                                                                                                 v-model="activity.name"
+                                                                                                 ref="name">
                     </v-list-tile>
-                    <v-list-tile><span style="width: 150px;text-align: left">活动标题: </span><input type="text" v-model="activity.title" ref="title">
+                    <v-list-tile><span style="width: 150px;text-align: left">活动标题: </span><input type="text"
+                                                                                                 v-model="activity.title"
+                                                                                                 ref="title">
                     </v-list-tile>
-                    <v-list-tile><span style="width: 150px;text-align: left">楼盘所在城市: </span><input type="text" v-model="activity.city" ref="city">
+                    <v-list-tile><span style="width: 150px;text-align: left">楼盘所在城市: </span><input type="text"
+                                                                                                   v-model="activity.city"
+                                                                                                   ref="city">
                     </v-list-tile>
-                    <v-list-tile><span style="width: 150px;text-align: left">楼盘名称: </span><input type="text" v-model="activity.project" ref="project">
+                    <v-list-tile><span style="width: 150px;text-align: left">楼盘名称: </span><input type="text"
+                                                                                                 v-model="activity.project"
+                                                                                                 ref="project">
                     </v-list-tile>
                     <v-list-tile style="height: 100px;margin-top:20px;"><span style="width: 150px;text-align: left">房源描述: </span>
                         <textarea name="" ref="roomDesc" v-model="activity.roomDesc" cols="30" rows="3"
@@ -84,7 +92,7 @@
                     </v-list-tile>
 
                     <v-list-tile style="height: 150px;margin-top:45px;"><span style="width: 150px;text-align: left">签约描述: </span>
-                        <textarea name="" ref="signDesc" v-model="activity.signDesc" cols="36" rows="8"
+                        <textarea name="" ref="signDesc" v-model="activity.signDesc" cols="36" rows="6"
                                   placeholder="在这里填写..."></textarea>
                     </v-list-tile>
                     <v-list-tile><span style="width: 150px;text-align: left">创建时间: </span>
@@ -111,30 +119,51 @@
                                 v-model="activity.needSendSms"
                         ></v-switch>
                     </v-list-tile>
-                    <v-list-tile><span style="width: 120px;text-align: left">正式时间: </span>
-                        <ul>
-                            <li>
-                                {{activity.formalTime.start}} 至
-                                {{activity.formalTime.end}}
-                            </li>
-                        </ul>
-                        <v-btn color="error" flat
+                </v-list>
+                <v-list style="border-top:1px solid #ccc;">
+                    <v-list-tile><span
+                            style="width: 150px;text-align: center; border-left: 4px solid #7fe27f">正式时间:</span>
+                    </v-list-tile>
+                </v-list>
+                <v-list style="border-bottom: 1px solid #ccc;">
+                    <v-list-tile>
+                        <span style="width: 100%;text-align: left">
+                              {{activity.formalTime.start}} 至 {{activity.formalTime.end}}
+                          </span>
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-btn color="success"
                                @click="showTimeUpdateDialog('formal', activity.formalTime.start, activity.formalTime.end)">
                             修改
                         </v-btn>
                     </v-list-tile>
                 </v-list>
                 <v-list style="margin-top: 0px;">
-                    <v-list-tile><span style="width: 200px;text-align: left">公测时间:  <v-btn color="success" flat @click="showTimeUpdateDialog('testAdd')">新增</v-btn></span>
-                        <ul style="position: absolute;display: flex;flex-direction: column;left: 200px;top: 0px;display: flex; flex-direction: column">
-                            <li style="" v-for="(item, index) in activity.testTime" :key="index">{{item.start}} 至 {{item.end}} <v-btn color="error" flat @click="showTimeUpdateDialog('testUpdate', item.start, item.end, index)">修改
-                            </v-btn></li>
-                        </ul>
+                    <v-list-tile><span
+                            style="width: 150px;text-align: center;border-left: 4px solid #ff7000">公测时间: </span>
+                        <v-btn color="success" flat @click="showTimeUpdateDialog('testAdd')">点击新增</v-btn>
+                    </v-list-tile>
+                </v-list>
+                <v-list style="margin-top: 0px;border-bottom: 1px solid #ccc;"
+                        v-for="(item, index) in activity.testTime">
+                    <v-list-tile>
+                        <span>{{index + 1}}.&nbsp;</span>
+                        <span style="display: inline-block;width: 100%;text-align: left;">
+                                {{item.start}} 至 {{item.end}}
+                            </span>
+
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-btn color="success" @click="showTimeUpdateDialog('testUpdate', item.start, item.end, index)">
+                            修改
+                        </v-btn>
+                        <v-btn color="warning" @click="showDelTestTimeDialog(index)">删除
+                        </v-btn>
                     </v-list-tile>
                 </v-list>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="error" @click.native="activityDialog = false">关闭</v-btn>
+                    <v-btn color="error" @click.native="closeUpdateDialog">关闭</v-btn>
                     <v-btn color="primary" @click="updateActivity">确定修改</v-btn>
                 </v-card-actions>
             </v-card>
@@ -164,18 +193,32 @@
             <v-card style="padding-top: 30px;background: #fff;color: #000; height: 500px;">
                 设置开始和结束时间
                 <v-card-title style="height: 200px;margin: 20px auto;">
-                    <div style="margin: 0 auto;">
-                        <date-picker :date="startTime" :option="startOption" :limit="startLimit"
-                                     style="border: 1px solid #ccc;"></date-picker>
-                        <span>&nbsp;&nbsp;至&nbsp;&nbsp;</span>
-                        <date-picker :date="endTime" :option="endOption" :limit="endLimit"
-                                     style="border: 1px solid #ccc;"></date-picker>
+                    <div style="display: flex;flex-direction: column;width: 100%;">
+                        <div style="margin-bottom: 8px;">
+                            开始：
+                            <date-picker :date="startTime" :option="startOption" :limit="startLimit"
+                                         style="border: 1px solid #ccc;"></date-picker>
+                        </div>
+                        <div>结束：
+                            <date-picker :date="endTime" :option="endOption" :limit="endLimit"
+                                         style="border: 1px solid #ccc;"></date-picker>
+                        </div>
                     </div>
                 </v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="red" flat @click.native="dateTimeDialog = false">取消</v-btn>
                     <v-btn color="info" flat @click="setTime">确定</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="delTestTimeDialog" max-width="600px">
+            <v-card style="padding-top: 30px;">
+                确定要删除这个公测时间吗？
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="error" flat @click.native="delTestTimeDialog = false">取消</v-btn>
+                    <v-btn color="primary" flat @click="delTestTime">确定</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -195,8 +238,9 @@
             dialog: false,
             valid: true,
             alert: false,
-            errmsg: '错误提示',
             dateTimeDialog: false,
+            delTestTimeDialog: false,
+            delTestTimeIndex: null,
             timeType: null,
             headers: [
                 {text: '活动名称', align: 'center', value: 'name', sortable: false},
@@ -312,7 +356,7 @@
                             let end = self.endTime.time
                             if (start == '' || end == '') {
                                 alert('请设置起始终时间和结束时间')
-                            }else {
+                            } else {
                                 self.activity.testTime.push({
                                     start: start,
                                     end: end
@@ -450,8 +494,20 @@
             updateActivity () {
                 this.submitUpdateDialog = true
             },
-            addTest () {
-
+            closeUpdateDialog () {
+                this.activityDialog = false
+                this.queryValidActivity()
+            },
+            delTestTime () {
+                let that = this
+                this.activity.testTime.splice(this.delTestTimeIndex, 1)
+                window.setTimeout(function () {
+                    that.delTestTimeDialog = false
+                }, 500)
+            },
+            showDelTestTimeDialog (index) {
+                this.delTestTimeIndex = index
+                this.delTestTimeDialog = true
             },
             submitUpdate () {
                 let formData = {
@@ -501,7 +557,7 @@
                     formData.formalTime = JSON.stringify(formalTime)
                 }
 
-                let testTime = this.activity.testTime
+                let testTime = this.sortTestTime(this.activity.testTime)
                 formData.testTime = JSON.stringify(testTime)
 
                 console.log(formData)
@@ -527,6 +583,11 @@
                     }
                 })
             },
+            sortTestTime (testTimes) { // 测试时间排序
+                return testTimes.sort(function (a, b) {
+                    return Date.parse(a.start) - Date.parse(b.start)
+                })
+            },
             goToManageActivity (activityId, name) {
                 let token = sessionStorage.getItem('token')
 //                window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin`, '_blank')
@@ -535,6 +596,25 @@
         },
         mounted() {
             this.queryValidActivity()
+            let tmp = new Date()
+            let today = ''
+            let self = this
+            today = this.endTime.time = this.startTime.time = this.formatDate(tmp)
+            tmp.setDate(tmp.getDate() - 1)
+            this.startLimit[0].from = this.endLimit[0].from = this.formatDate(tmp)
+//            this.$watch('startTime.time', function (newVal, oldVal) {
+//                if (newVal >= self.endTime.time) {
+//                    self.startTime.time = self.endTime.time
+//                } else {
+//                    self.endLimit[0].from = newVal
+//                }
+//            })
+//            this.$watch('endTime.time', function (newVal, oldVal) {
+//                if (newVal >= today && newVal >= self.startLimit[0].to) {
+//                    self.startLimit[0].to = newVal
+//                }
+//                if (self.startTime.time > newVal) self.startTime.time = newVal
+//            })
         }
     }
 </script>
@@ -553,7 +633,7 @@
         outline: none;
         resize: none;
         text-indent: 12px;
-        width: 800px;
+        width: 500px;
         display: inline-block;
     }
 </style>

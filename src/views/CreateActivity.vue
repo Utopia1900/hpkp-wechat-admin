@@ -44,25 +44,24 @@
             </div>
             <label>7. 设置活动时间</label>
             <!--<h2>手风琴动画效果</h2>-->
-            <div style="margin-left: 7%; text-align: left;">
-
-                <span>正式时间：</span>
-                <v-btn color="info" flat @click.native="addFormal">点击新增</v-btn>
-                <div v-show="showFormal" style="margin-left: 0%;width:94%;border:1px solid #ccc; padding: 15px;">
-                    开始：{{formalTime.start}} &nbsp;&nbsp;结束：{{formalTime.end}}
-                </div>
-            </div>
             <div style="margin-left: 7%; text-align: left;margin-top: 15px;">
-                <span>测试时间：</span>
+                <span style="display: inline-block;border-left: 4px solid #ff7000;padding-left: 5px;">公测时间：</span>
                 <v-btn color="info" flat @click.native="addTestTime">点击新增</v-btn>
                 <div v-show="showTest" style="margin-left: 0%;width:94%;border:1px solid #ccc; padding: 15px;"
                      v-for="(item, index) in testTime">
                     开始：{{item.start}} &nbsp;&nbsp;结束：{{item.end}}
                 </div>
             </div>
+            <div style="margin-left: 7%; text-align: left;">
 
+                <span style="display: inline-block;border-left: 4px solid #7fe27f;padding-left: 5px;">正式时间：</span>
+                <v-btn color="info" flat @click.native="addFormal">点击创建</v-btn>
+                <div v-show="showFormal" style="margin-left: 0%;width:94%;border:1px solid #ccc; padding: 15px;">
+                    开始：{{formalTime.start}} &nbsp;&nbsp;结束：{{formalTime.end}}
+                </div>
+            </div>
             <div style="padding-top: 80px;">
-                <v-btn color="primary" dark large @click="submitCreateActivity">点击创建</v-btn>
+                <v-btn color="primary" dark large @click="submitCreateActivity">确定</v-btn>
             </div>
         </v-card>
         <v-dialog v-model="toastDialog" max-width="600px">
@@ -153,7 +152,7 @@
         computed: {
             startOption () {
                 let startOption = this.deepCopy()
-                startOption.placeholder = '起始时间'
+                startOption.placeholder = '开始时间'
                 return startOption
             },
             endOption () {
@@ -208,6 +207,23 @@
             setTime () {
                 let self = this
                 let timeType = this.timeType
+                let duration = (Date.parse(self.endTime.time) - Date.parse(self.startTime.time)) / 60000
+                if (duration < config.duration) {
+                    self.errmsg = `结束时间必须大于开始时间至少${config.duration}分钟, 请重新设置`
+                    self.toastDialog = true
+                    return false
+                }
+                let testTimeLength = self.testTime.length
+                if (testTimeLength >= 1) {
+                    let lastTestTimeEnd = self.testTime[testTimeLength - 1].end // 最后一个公测的结束时间
+                    console.log('lastend', lastTestTimeEnd)
+                    let formalDurationTest = (Date.parse(self.startTime.time) - Date.parse(lastTestTimeEnd)) / 60000
+                    if (formalDurationTest < config.testSeconds) {
+                        self.errmsg = `开始时间和上一个公测的结束时间必须相差至少${config.testSeconds}分钟,请重新设置！`
+                        self.toastDialog = true
+                        return false
+                    }
+                }
                 if (timeType) {
                     switch (timeType) {
                         case 'formal':

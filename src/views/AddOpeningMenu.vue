@@ -120,24 +120,6 @@
                         ></v-switch>
                     </v-list-tile>
                 </v-list>
-                <v-list style="border-top:1px solid #ccc;">
-                    <v-list-tile><span
-                            style="width: 150px;text-align: center; border-left: 4px solid #7fe27f">正式时间:</span>
-                    </v-list-tile>
-                </v-list>
-                <v-list style="border-bottom: 1px solid #ccc;">
-                    <v-list-tile>
-                        <span style="width: 100%;text-align: left">
-                              {{activity.formalTime.start}} 至 {{activity.formalTime.end}}
-                          </span>
-                    </v-list-tile>
-                    <v-list-tile>
-                        <v-btn color="success"
-                               @click="showTimeUpdateDialog('formal', activity.formalTime.start, activity.formalTime.end)">
-                            修改
-                        </v-btn>
-                    </v-list-tile>
-                </v-list>
                 <v-list style="margin-top: 0px;">
                     <v-list-tile><span
                             style="width: 150px;text-align: center;border-left: 4px solid #ff7000">公测时间: </span>
@@ -158,6 +140,24 @@
                             修改
                         </v-btn>
                         <v-btn color="warning" @click="showDelTestTimeDialog(index)">删除
+                        </v-btn>
+                    </v-list-tile>
+                </v-list>
+                <v-list style="border-top:1px solid #ccc;">
+                    <v-list-tile><span
+                            style="width: 150px;text-align: center; border-left: 4px solid #7fe27f">正式时间:</span>
+                    </v-list-tile>
+                </v-list>
+                <v-list style="border-bottom: 1px solid #ccc;">
+                    <v-list-tile>
+                        <span style="width: 100%;text-align: left">
+                              {{activity.formalTime.start}} 至 {{activity.formalTime.end}}
+                          </span>
+                    </v-list-tile>
+                    <v-list-tile>
+                        <v-btn color="success"
+                               @click="showTimeUpdateDialog('formal', activity.formalTime.start, activity.formalTime.end)">
+                            修改
                         </v-btn>
                     </v-list-tile>
                 </v-list>
@@ -286,7 +286,7 @@
         computed: {
             startOption () {
                 let startOption = this.deepCopy()
-                startOption.placeholder = '起始时间'
+                startOption.placeholder = '开始时间'
                 return startOption
             },
             endOption () {
@@ -333,22 +333,47 @@
             setTime () {
                 let self = this
                 let timeType = this.timeType
+                let duration = (Date.parse(self.endTime.time) - Date.parse(self.startTime.time)) / 60000
+                if (duration < config.duration) {
+                    self.errmsg = `结束时间必须大于开始时间至少${config.duration}分钟, 请重新设置`
+                    self.toastDialog = true
+                    return false
+                }
                 if (timeType) {
                     switch (timeType) {
                         case 'formal':
-                            self.activity.formalTime.start = self.startTime.time
-                            self.activity.formalTime.end = self.endTime.time
-//                            self.showFormal = true
-                            self.dateTimeDialog = false
+                            let testTimeLength = self.activity.testTime.length
+                            if (testTimeLength >= 1) {
+                                let lastTestTimeEnd = self.activity.testTime[testTimeLength - 1].end // 最后一个公测的结束时间
+                                console.log('lastend', lastTestTimeEnd)
+                                let formalDurationTest = (Date.parse(self.startTime.time) - Date.parse(lastTestTimeEnd))/60000
+                                if (formalDurationTest < config.testSeconds) {
+                                    self.errmsg = `正式的开始时间和最后一个公测的结束时间必须相差至少${config.testSeconds}分钟,请重新设置！`
+                                    self.toastDialog = true
+                                    return false
+                                } else {
+                                    self.activity.formalTime.start = self.startTime.time
+                                    self.activity.formalTime.end = self.endTime.time
+                                    self.dateTimeDialog = false
+                                }
+                            }
                             break;
                         case 'testUpdate':
-                            /* self.activity.testTime.push({
-                             start: self.startTime.time,
-                             end: self.endTime.time
-                             })*/
+                            if (self.testTimeIndex >= 1) {
+                                let preTestTimeEnd = self.activity.testTime[self.testTimeIndex - 1].end // 上一个公测的结束时间
+                                let start = Date.parse(self.startTime.time)
+                                let preEnd = Date.parse(preTestTimeEnd)
+                                let seconds = (start - preEnd) / 60000
+                                if (seconds < config.testSeconds) {
+                                    self.errmsg = `开始时间和上个公测的结束时间必须相差至少${config.testSeconds}分钟,请重新设置！`
+                                    self.toastDialog = true
+                                    return false
+                                } else {
+                                    self.activity.testTime[self.testTimeIndex].start = self.startTime.time
+                                }
+                            }
                             self.activity.testTime[self.testTimeIndex].start = self.startTime.time
                             self.activity.testTime[self.testTimeIndex].end = self.endTime.time
-//                            self.showTest = true
                             self.dateTimeDialog = false
                             break;
                         case 'testAdd':
@@ -602,19 +627,6 @@
             today = this.endTime.time = this.startTime.time = this.formatDate(tmp)
             tmp.setDate(tmp.getDate() - 1)
             this.startLimit[0].from = this.endLimit[0].from = this.formatDate(tmp)
-//            this.$watch('startTime.time', function (newVal, oldVal) {
-//                if (newVal >= self.endTime.time) {
-//                    self.startTime.time = self.endTime.time
-//                } else {
-//                    self.endLimit[0].from = newVal
-//                }
-//            })
-//            this.$watch('endTime.time', function (newVal, oldVal) {
-//                if (newVal >= today && newVal >= self.startLimit[0].to) {
-//                    self.startLimit[0].to = newVal
-//                }
-//                if (self.startTime.time > newVal) self.startTime.time = newVal
-//            })
         }
     }
 </script>

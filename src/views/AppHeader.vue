@@ -23,7 +23,7 @@
             <v-icon :style="currentMenuActived ? {color: '#e50000'} : ''">widgets</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            获取当前菜单项
+            公众号菜单项
           </v-list-tile-content>
         </v-list-tile>
       </v-list>

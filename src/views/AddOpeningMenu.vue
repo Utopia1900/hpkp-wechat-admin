@@ -78,6 +78,15 @@
                                                                                                  v-model="activity.title"
                                                                                                  ref="title">
                     </v-list-tile>
+                    <v-list-tile><span style="width: 150px;text-align: left">活动类型: </span>
+                        <v-flex xs6 sm4 d-flex>
+                            <v-select
+                                    :items="typeItems"
+                                    label="选择活动类型"
+                                    v-model="activityType"
+                            ></v-select>
+                        </v-flex>
+                    </v-list-tile>
                     <v-list-tile><span style="width: 150px;text-align: left">楼盘所在城市: </span><input type="text"
                                                                                                    v-model="activity.city"
                                                                                                    ref="city">
@@ -100,11 +109,7 @@
                             <li>{{ formatDate(activity.createdAt) }}</li>
                         </ul>
                     </v-list-tile>
-                    <!--<v-list-tile><span style="width: 120px;text-align: left">修改时间: </span>
-                      <ul>
-                        <li>{{ formatDate(activity.updatedAt) }}</li>
-                      </ul>
-                    </v-list-tile>-->
+
                     <v-list-tile>
                         <span style="width: 320px;text-align: left">是否限制一个账户只能购买一套房源: </span>
                         <v-switch
@@ -281,7 +286,8 @@
                     from: '',
                     to: ''
                 }
-            ]
+            ],
+            typeItems: ['房源', '车位']
         }),
         computed: {
             startOption () {
@@ -293,6 +299,16 @@
                 let endOption = this.deepCopy()
                 endOption.placeholder = '结束时间'
                 return endOption
+            },
+            activityType () {
+                switch (this.activity.type) {
+                    case 0:
+                        return '房源'
+                        break;
+                    case 1:
+                        return '车位'
+                        break;
+                }
             }
         },
         components: {
@@ -549,6 +565,7 @@
                 let needSendSms = JSON.parse(window.sessionStorage.getItem('activity')).needSendSms
                 let formalStart = JSON.parse(window.sessionStorage.getItem('activity')).formalTime.start
                 let formalEnd = JSON.parse(window.sessionStorage.getItem('activity')).formalTime.end
+                let type = JSON.parse(window.sessionStorage.getItem('activity')).type
                 if (name !== this.activity.name) {
                     formData.name = this.activity.name
                 }
@@ -573,7 +590,9 @@
                 if (needSendSms !== this.activity.needSendSms) {
                     formData.needSendSms = this.activity.needSendSms
                 }
-
+                if (type !== this.activity.type) {
+                    formData.type = this.activity.type
+                }
                 if (formalStart !== this.activity.formalTime.start || formalEnd !== this.activity.formalTime.end) {
                     let formalTime = {
                         start: this.activity.formalTime.start,
@@ -584,7 +603,6 @@
 
                 let testTime = this.sortTestTime(this.activity.testTime)
                 formData.testTime = JSON.stringify(testTime)
-
                 console.log(formData)
                 let self = this
                 const options = {
@@ -612,6 +630,16 @@
                 return testTimes.sort(function (a, b) {
                     return Date.parse(a.start) - Date.parse(b.start)
                 })
+            },
+            formatType (args) {
+                switch(args) {
+                    case 0:
+                        this.activity.type = '房源'
+                        break;
+                    case 1:
+                        this.activity.type = '车位'
+                        break;
+                }
             },
             goToManageActivity (activityId, name) {
                 let token = sessionStorage.getItem('token')

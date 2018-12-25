@@ -3,29 +3,42 @@
         <h3 style="height: 40px; line-height: 40px; background-color: #fff;">创建活动</h3>
         <v-card>
             <div>
-                <label for="name">1. 活动信息(必填)<span style="color: red">*</span> <span style="color: red">注意：活动名称只能为字母或者数字的组合，例如 wkkp1、whld2</span></label>
+                <label for="name">1. 活动信息<span style="color: red">*</span> <span style="color: red">&nbsp;&nbsp;必填,&nbsp;注意：活动名称只能为字母或者数字的组合，例如 wkkp1、whld2</span></label>
                 <div style="display: flex; flex-direction: row; margin-left: 5%; width: 90%">
                     <input type="text" id="name" v-model="name" placeholder="请填写活动名称" style="margin: 0 5px;">
                     <input type="text" id="title" v-model="title" placeholder="请填写活动标题" style="margin: 0 5px;">
                 </div>
             </div>
             <div>
-                <label for="name">2. 楼盘信息(必填)<span style="color: red">*</span> </label>
+                <label for="name">2. 楼盘(或:车位)信息<span style="color: red">&nbsp;&nbsp;必填*</span> </label>
                 <div style="display: flex; flex-direction: row; margin-left: 5%; width: 90%">
                     <input type="text" id="city" v-model="city" placeholder="请填写楼盘所在城市" style="margin: 0 5px;">
                     <input type="text" id="project" v-model="project" placeholder="请填写楼盘名称" style="margin: 0 5px;">
                 </div>
             </div>
             <div>
-                <label for="roomDesc">3. 房源描述(非必填)<span style="color: green">*</span></label>
+                <label>3. 选择活动类型<span style="color: red">&nbsp;&nbsp;必选*</span></label>
+            </div>
+            <div style="margin-left: 5%">
+                <v-flex xs6 sm4 d-flex>
+                    <v-select
+                            :items="items"
+                            label="选择活动类型"
+                            v-model="type"
+                    ></v-select>
+                </v-flex>
+
+            </div>
+            <div>
+                <label for="roomDesc">4. 房源(或:车位)描述<span style="color: green">&nbsp;&nbsp;非必填*</span></label>
                 <textarea name="" id="roomDesc" v-model="roomDesc" cols="40" rows="5" placeholder="在这里填写..."></textarea>
             </div>
             <div>
-                <label for="signDesc">4. 签约描述(非必填)<span style="color: green">*</span></label>
+                <label for="signDesc">5. 签约描述<span style="color: green">&nbsp;&nbsp;非必填*</span></label>
                 <textarea name="" id="signDesc" v-model="signDesc" cols="40" rows="5" placeholder="在这里填写..."></textarea>
             </div>
             <div>
-                <label>5. 是否限制一个账户只能购买一套房源</label>
+                <label>6. 是否限制一个账户只能购买一套房源<br/>(或：是否限制一个账户只能购买一个车位)</label>
             </div>
             <div style="margin-left: 5%">
                 <v-switch
@@ -34,7 +47,7 @@
                 ></v-switch>
             </div>
             <div>
-                <label>6. 是否需要发送短信</label>
+                <label>7. 是否需要发送短信</label>
             </div>
             <div style="margin-left: 5%">
                 <v-switch
@@ -42,7 +55,8 @@
                         v-model="needSendSms"
                 ></v-switch>
             </div>
-            <label>7. 设置活动时间</label>
+
+            <label>8. 设置活动时间</label>
             <!--<h2>手风琴动画效果</h2>-->
             <div style="margin-left: 7%; text-align: left;margin-top: 15px;">
                 <span style="display: inline-block;border-left: 4px solid #ff7000;padding-left: 5px;">公测时间：</span>
@@ -146,7 +160,9 @@
                         from: '',
                         to: ''
                     }
-                ]
+                ],
+                items: ['房源', '车位'],
+                type: ''
             }
         },
         computed: {
@@ -250,7 +266,11 @@
                 } else if (this.city === '' || this.project === '' || this.title === '') {
                     this.toastDialog = true
                     this.errmsg = '请完整填写楼盘信息'
-                } else {
+                } else if (this.type === '') {
+                    this.toastDialog = true
+                    this.errmsg = '请选择活动类型'
+                }
+                else {
                     let formData = {
                         token: sessionStorage.getItem('token'),
                         name: this.name,
@@ -260,7 +280,8 @@
                         isLimited: this.isLimited,
                         needSendSms: this.needSendSms,
                         formalTime: JSON.stringify(this.formalTime),
-                        testTime: JSON.stringify(this.testTime)
+                        testTime: JSON.stringify(this.testTime),
+                        type: this.type === '房源' ? 0 : 1
                     }
                     if (this.roomDesc) {
                         formData.roomDesc = this.roomDesc

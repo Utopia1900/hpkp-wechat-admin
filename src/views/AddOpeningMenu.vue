@@ -20,7 +20,7 @@
                         </ul>
                     </td>
                     <td class="text-xs-center">
-                        <ul v-for="(item, index) in props.item.testTime">
+                        <ul v-for="(item, index) in props.item.testTime" :key="index">
                             <li>{{item.start}}&nbsp;&nbsp;至&nbsp;&nbsp;{{item.end}}</li>
                         </ul>
                     </td>
@@ -28,7 +28,7 @@
                         <v-btn color="error" @click="showActivity(props.item)">查看&nbsp;|&nbsp;修改</v-btn>
                         <v-btn color="info" @click="addOpeningMenu(props.item.id)">添加开盘菜单</v-btn>
                         <v-btn color="success" @click="queryCheckUrl(props.item.id)">获取开盘菜单URL</v-btn>
-                        <v-btn color="warning" @click="goToManageActivity(props.item.id, props.item.name)">管理页面入口
+                        <v-btn color="warning" @click="goToManageActivity(props.item.id, props.item.name, props.item.type)">管理页面入口
                         </v-btn>
                     </td>
                 </template>
@@ -132,7 +132,7 @@
                     </v-list-tile>
                 </v-list>
                 <v-list style="margin-top: 0px;border-bottom: 1px solid #ccc;"
-                        v-for="(item, index) in activity.testTime">
+                        v-for="(item, index) in activity.testTime" :key="index">
                     <v-list-tile>
                         <span>{{index + 1}}.&nbsp;</span>
                         <span style="display: inline-block;width: 100%;text-align: left;">
@@ -641,10 +641,10 @@
                         break;
                 }
             },
-            goToManageActivity (activityId, name) {
+            goToManageActivity (activityId, name, activityType) {
                 let token = sessionStorage.getItem('token')
-//                window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin`, '_blank')
-                window.open(`/suAdmin/manage/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin`, '_blank')
+               window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin&activityType=${activityType}`, '_blank')
+                // window.open(`/suAdmin/manage/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin&activityType=${activityType}`, '_blank')
             }
         },
         mounted() {

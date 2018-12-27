@@ -62,7 +62,7 @@
                 <span style="display: inline-block;border-left: 4px solid #ff7000;padding-left: 5px;">公测时间：</span>
                 <v-btn color="info" flat @click.native="addTestTime">点击新增</v-btn>
                 <div v-show="showTest" style="margin-left: 0%;width:94%;border:1px solid #ccc; padding: 15px;"
-                     v-for="(item, index) in testTime">
+                     v-for="(item, index) in testTime" :key="index">
                     开始：{{item.start}} &nbsp;&nbsp;结束：{{item.end}}
                 </div>
             </div>

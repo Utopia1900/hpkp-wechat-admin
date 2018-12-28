@@ -76,11 +76,10 @@ export default {
             this.menuInfoHTML = this.syntaxHighlight(
               data.menuConfig.selfmenu_info
             );
-            this.menuObj = JSON.stringify(
-              data.menuConfig.selfmenu_info,
-              undefined,
-              2
-            );
+            
+            this.menuObj = JSON.stringify(data.menuConfig.selfmenu_info);
+            // this.menuInfoHTML = JSON.stringify(data.menuConfig.selfmenu_info)
+            // this.menuObj = JSON.stringify(data.menuConfig.selfmenu_info)
           } else {
             this.errmsg = `${data.errmsg}`;
             this.addMenuDialog = true;

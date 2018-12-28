@@ -643,8 +643,8 @@
             },
             goToManageActivity (activityId, name, activityType) {
                 let token = sessionStorage.getItem('token')
-               window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin&activityType=${activityType}`, '_blank')
-                // window.open(`/suAdmin/manage/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin&activityType=${activityType}`, '_blank')
+            //    window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin&activityType=${activityType}`, '_blank')
+                window.open(`/suAdmin/manage/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin&activityType=${activityType}`, '_blank')
             }
         },
         mounted() {

@@ -3,7 +3,7 @@
         <h3 style="height: 40px; line-height: 40px; background-color: #fff;">创建活动</h3>
         <v-card>
             <div>
-                <label for="name">1. 活动信息<span style="color: red">*</span> <span style="color: red">&nbsp;&nbsp;必填,&nbsp;注意：活动名称只能为字母或者数字的组合，例如 wkkp1、whld2</span></label>
+                <label for="name">1. 活动信息 <span style="color: red">&nbsp;&nbsp;必填*,&nbsp;注意：活动名称只能为字母或者数字的组合，例如 wkkp1、whld2</span></label>
                 <div style="display: flex; flex-direction: row; margin-left: 5%; width: 90%">
                     <input type="text" id="name" v-model="name" placeholder="请填写活动名称" style="margin: 0 5px;">
                     <input type="text" id="title" v-model="title" placeholder="请填写活动标题" style="margin: 0 5px;">
@@ -17,18 +17,51 @@
                 </div>
             </div>
             <div>
-                <label>3. 选择活动类型<span style="color: red">&nbsp;&nbsp;必选*</span></label>
+                <label>3. 选择活动类型并设置列表的排列<span style="color: red">&nbsp;&nbsp;必选*</span></label>
             </div>
             <div style="margin-left: 5%">
-                <v-flex xs6 sm4 d-flex>
+                <v-flex xs6 sm4 d-flex style="margin-left: 30px;">
                     <v-select
                             :items="items"
-                            label="选择活动类型"
+                            label="① 选择活动类型"
                             v-model="type"
                     ></v-select>
                 </v-flex>
+                <div style="text-align: left;margin-left: 30px; " v-show="type!=''">
+                    <div style="color:#1976d2 !important;">
+                        ② 设置{{type=='房源' ? '房源':'车位'}}列表的排列
+                    </div>
+                    <div v-show="type!=''" style="display: flex; flex-direction: row;width: 90%">
+                            <v-radio-group v-model="bNo" :mandatory="false" row>
+                                <span>{{bNo_title}}:</span>
+                                <v-radio label="升序" value="1"></v-radio>
+                                <v-radio label="降序" value="0"></v-radio>
+                            </v-radio-group>
+                            <v-radio-group v-model="uNo" :mandatory="false" row v-show="type == '房源'">
+                                <span>{{uNo_title}}:</span>
+                                <v-radio label="升序" value="1"></v-radio>
+                                <v-radio label="降序" value="0"></v-radio>
+                            </v-radio-group>
+                            <v-radio-group v-model="floor" :mandatory="false" row>
+                                <span>{{floor_title}}:</span>
+                                <v-radio label="升序" value="1"></v-radio>
+                                <v-radio label="降序" value="0"></v-radio>
+                            </v-radio-group>
+                            <v-radio-group v-model="horType" :mandatory="false" row>
+                                <span>水平排列:</span>
+                                <v-radio label="升序" value="1"></v-radio>
+                                <v-radio label="降序" value="0"></v-radio>
+                            </v-radio-group>
+
+
+                    </div>
+                </div>
 
             </div>
+            <!--<div>-->
+                <!--<label>4. 设置房源(或：车位)列表的排列<span style="color: red">&nbsp;&nbsp;必选*</span></label>-->
+            <!--</div>-->
+
             <div>
                 <label for="roomDesc">4. 房源(或:车位)描述<span style="color: green">&nbsp;&nbsp;非必填*</span></label>
                 <textarea name="" id="roomDesc" v-model="roomDesc" cols="40" rows="5" placeholder="在这里填写..."></textarea>
@@ -162,7 +195,11 @@
                     }
                 ],
                 items: ['房源', '车位'],
-                type: ''
+                type: '',
+                bNo: '1',
+                uNo: '1',
+                floor: '1',
+                horType: '1'
             }
         },
         computed: {
@@ -175,6 +212,24 @@
                 let endOption = this.deepCopy()
                 endOption.placeholder = '结束时间'
                 return endOption
+            },
+            bNo_title () {
+                if (this.type != '') {
+                    let bNo_title = this.type== '房源' ? '楼栋' : '区域'
+                    return bNo_title
+                }
+            },
+            uNo_title () {
+                if (this.type != '') {
+                    let uNo_title = this.type== '房源' ? '单元' : '车位无单元'
+                    return uNo_title
+                }
+            },
+            floor_title () {
+                if (this.type != '') {
+                    let floor_title = this.type== '房源' ? '楼层' : '垂直排列'
+                    return floor_title
+                }
             }
         },
         components: {
@@ -260,17 +315,23 @@
                 }
             },
             submitCreateActivity () {
-                if (this.name === '') {
+                if (this.name == '') {
                     this.toastDialog = true
                     this.errmsg = '请填写活动名称'
-                } else if (this.city === '' || this.project === '' || this.title === '') {
+                } else if (this.city == '' || this.project == '' || this.title == '') {
                     this.toastDialog = true
                     this.errmsg = '请完整填写楼盘信息'
-                } else if (this.type === '') {
+                } else if (this.type == '') {
                     this.toastDialog = true
                     this.errmsg = '请选择活动类型'
                 }
                 else {
+                    let align = {
+                        bNo: this.bNo == '1' ? 1 : 0,
+                        uNO: this.uNo == '1' ? 1 : 0,
+                        floor: this.floor == '1' ? 1 : 0,
+                        horType: this.horType == '1' ? 1 : 0
+                    }
                     let formData = {
                         token: sessionStorage.getItem('token'),
                         name: this.name,
@@ -281,7 +342,8 @@
                         needSendSms: this.needSendSms,
                         formalTime: JSON.stringify(this.formalTime),
                         testTime: JSON.stringify(this.testTime),
-                        type: this.type === '房源' ? 0 : 1
+                        type: this.type == '房源' ? 0 : 1,
+                        align: JSON.stringify(align)
                     }
                     if (this.roomDesc) {
                         formData.roomDesc = this.roomDesc
@@ -327,6 +389,14 @@
             let tmp = new Date()
             tmp.setDate(tmp.getDate() - 1)
             this.startLimit[0].from = this.endLimit[0].from = this.formatDate(tmp)
+        },
+        watch: {
+            'type': function (newval, oldVal) {
+                this.bNo = '1'
+                this.uNo = '1'
+                this.floor = '1'
+                this.horType = '1'
+            }
         }
     }
 </script>

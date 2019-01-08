@@ -287,7 +287,8 @@
                     to: ''
                 }
             ],
-            typeItems: ['房源', '车位']
+            typeItems: ['房源', '车位'],
+//            activityType: '房源'
         }),
         computed: {
             startOption () {
@@ -300,14 +301,17 @@
                 endOption.placeholder = '结束时间'
                 return endOption
             },
-            activityType () {
-                switch (this.activity.type) {
-                    case 0:
-                        return '房源'
-                        break;
-                    case 1:
-                        return '车位'
-                        break;
+            activityType: {
+                get() {
+                    return this.activity.type == '0' ? '房源' : '车位'
+                },
+                set(val){
+                    if (val == '房源') {
+                        this.activity.type = 0
+                    }
+                    if (val == '车位') {
+                        this.activity.type = 1
+                    }
                 }
             }
         },

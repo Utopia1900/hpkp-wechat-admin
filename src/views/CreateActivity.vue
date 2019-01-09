@@ -32,26 +32,54 @@
                         ② 设置{{type=='房源' ? '房源':'车位'}}列表的排列
                     </div>
                     <div v-show="type!=''" style="display: flex; flex-direction: row;width: 90%">
-                            <v-radio-group v-model="bNo" :mandatory="false" row>
-                                <span>{{bNo_title}}:</span>
-                                <v-radio label="升序" value="1"></v-radio>
-                                <v-radio label="降序" value="0"></v-radio>
-                            </v-radio-group>
-                            <v-radio-group v-model="uNo" :mandatory="false" row v-show="type == '房源'">
-                                <span>{{uNo_title}}:</span>
-                                <v-radio label="升序" value="1"></v-radio>
-                                <v-radio label="降序" value="0"></v-radio>
-                            </v-radio-group>
-                            <v-radio-group v-model="floor" :mandatory="false" row>
-                                <span>{{floor_title}}:</span>
-                                <v-radio label="升序" value="1"></v-radio>
-                                <v-radio label="降序" value="0"></v-radio>
-                            </v-radio-group>
-                            <v-radio-group v-model="horType" :mandatory="false" row>
-                                <span>水平排列:</span>
-                                <v-radio label="升序" value="1"></v-radio>
-                                <v-radio label="降序" value="0"></v-radio>
-                            </v-radio-group>
+                        <!--<v-radio-group v-model="bNo" :mandatory="false" row>-->
+                        <!--<span>{{activityType=='房源' ? '楼栋' : '区域'}}:</span>-->
+                        <!--<v-radio label="升序" value="1"></v-radio>-->
+                        <!--<v-radio label="降序" value="0"></v-radio>-->
+                        <!--</v-radio-group>-->
+                        <v-flex xs2 sm3 d-flex>
+                            <v-select
+                                    :items="alignItems"
+                                    :label="type=='房源' ? '楼栋' : '区域'"
+                                    v-model="bNo"
+                            ></v-select>
+                        </v-flex>
+                        <!--<v-radio-group v-model="uNo" :mandatory="false" row v-show="activityType == '房源'">-->
+                        <!--<span>{{activityType=='房源' ? '单元' : ''}}:</span>-->
+                        <!--<v-radio label="升序" value="1">1</v-radio>-->
+                        <!--<v-radio label="降序" value="0">0</v-radio>-->
+                        <!--</v-radio-group>-->
+                        <v-flex xs2 sm3 d-flex v-if="type=='房源'">
+                            <v-select
+                                    :items="alignItems"
+                                    :label="type=='房源' ? '单元' : ''"
+                                    v-model="uNo"
+                            ></v-select>
+                        </v-flex>
+                        <!--<v-radio-group v-model="floor" :mandatory="false" row>-->
+                        <!--<span>{{activityType=='房源' ? '楼层' : '垂直排列'}}:</span>-->
+                        <!--<v-radio label="升序" value="1"></v-radio>-->
+                        <!--<v-radio label="降序" value="0"></v-radio>-->
+                        <!--</v-radio-group>-->
+                        <v-flex xs2 sm3 d-flex>
+                            <v-select
+                                    :items="alignItems"
+                                    :label="type=='房源' ? '楼层' : '垂直排列'"
+                                    v-model="floor"
+                            ></v-select>
+                        </v-flex>
+                        <!--<v-radio-group v-model="horType" :mandatory="false" row>-->
+                        <!--<span>水平排列:</span>-->
+                        <!--<v-radio label="升序" value="1"></v-radio>-->
+                        <!--<v-radio label="降序" value="0"></v-radio>-->
+                        <!--</v-radio-group>-->
+                        <v-flex xs2 sm3 d-flex>
+                            <v-select
+                                    :items="alignItems"
+                                    label="水平排列"
+                                    v-model="horType"
+                            ></v-select>
+                        </v-flex>
 
 
                     </div>
@@ -196,10 +224,11 @@
                 ],
                 items: ['房源', '车位'],
                 type: '',
-                bNo: '1',
-                uNo: '1',
-                floor: '1',
-                horType: '1'
+                bNo: '',
+                uNo: '',
+                floor: '',
+                horType: '',
+                alignItems: ['升序', '降序']
             }
         },
         computed: {
@@ -212,24 +241,6 @@
                 let endOption = this.deepCopy()
                 endOption.placeholder = '结束时间'
                 return endOption
-            },
-            bNo_title () {
-                if (this.type != '') {
-                    let bNo_title = this.type== '房源' ? '楼栋' : '区域'
-                    return bNo_title
-                }
-            },
-            uNo_title () {
-                if (this.type != '') {
-                    let uNo_title = this.type== '房源' ? '单元' : '车位无单元'
-                    return uNo_title
-                }
-            },
-            floor_title () {
-                if (this.type != '') {
-                    let floor_title = this.type== '房源' ? '楼层' : '垂直排列'
-                    return floor_title
-                }
             }
         },
         components: {
@@ -326,57 +337,123 @@
                     this.errmsg = '请选择活动类型'
                 }
                 else {
-                    let align = {
-                        bNo: this.bNo == '1' ? 1 : 0,
-                        uNO: this.uNo == '1' ? 1 : 0,
-                        floor: this.floor == '1' ? 1 : 0,
-                        horType: this.horType == '1' ? 1 : 0
-                    }
-                    let formData = {
-                        token: sessionStorage.getItem('token'),
-                        name: this.name,
-                        city: this.city,
-                        project: this.project,
-                        title: this.title,
-                        isLimited: this.isLimited,
-                        needSendSms: this.needSendSms,
-                        formalTime: JSON.stringify(this.formalTime),
-                        testTime: JSON.stringify(this.testTime),
-                        type: this.type == '房源' ? 0 : 1,
-                        align: JSON.stringify(align)
-                    }
-                    if (this.roomDesc) {
-                        formData.roomDesc = this.roomDesc
-                    }
-                    if (this.signDesc) {
-                        formData.signDesc = this.signDesc
-                    }
-                    console.log(JSON.stringify(formData))
-                    const options = {
-                        method: 'POST',
-                        headers: {
-                            'content-type': 'application/json'
-                        },
-                        data: JSON.stringify(formData),
-                        url: config.preHttp + 'createActivity'
-                    }
-                    let self = this
-                    axios(options).then(response => {
-                        let data = response.data
-                        if (!data.errcode) {
-                            self.errmsg = '创建成功'
-                            self.toastDialog = true
-                            setTime(function () {
-                                self.toastDialog = false
-                                self.$router.push('/home/addOpeningMenu')
-                            }, 800)
+                    if (this.type == '房源') {
+                        if (this.bNo == '' || this.uNo == '' || this.floor == '' || this.horType == '') {
+                            alert('请设置排列')
                         } else {
-                            self.errmsg = `${data.errmsg}`
-                            self.toastDialog = true
-                        }
-                    }).catch(error => {
+                            let align = {
+                                bNo: this.bNo == '升序' ? 1 : 0,
+                                uNo: this.uNo == '升序' ? 1 : 0,
+                                floor: this.floor == '升序' ? 1 : 0,
+                                horType: this.horType == '升序' ? 1 : 0
+                            }
+                            let formData = {
+                                token: sessionStorage.getItem('token'),
+                                name: this.name,
+                                city: this.city,
+                                project: this.project,
+                                title: this.title,
+                                isLimited: this.isLimited,
+                                needSendSms: this.needSendSms,
+                                formalTime: JSON.stringify(this.formalTime),
+                                testTime: JSON.stringify(this.testTime),
+                                type: this.type == '房源' ? 0 : 1,
+                                align: JSON.stringify(align)
+                            }
+                            if (this.roomDesc) {
+                                formData.roomDesc = this.roomDesc
+                            }
+                            if (this.signDesc) {
+                                formData.signDesc = this.signDesc
+                            }
+                            console.log(JSON.stringify(formData))
+                            const options = {
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json'
+                                },
+                                data: JSON.stringify(formData),
+                                url: config.preHttp + 'createActivity'
+                            }
+                            let self = this
+                            axios(options).then(response => {
+                                let data = response.data
+                                if (!data.errcode) {
+                                    self.errmsg = '创建成功'
+                                    self.toastDialog = true
+                                    setTime(function () {
+                                        self.toastDialog = false
+                                        self.$router.push('/home/addOpeningMenu')
+                                    }, 800)
+                                } else {
+                                    self.errmsg = `${data.errmsg}`
+                                    self.toastDialog = true
+                                }
+                            }).catch(error => {
 //              alert(error)
-                    })
+                            })
+
+                        }
+                    } else if (this.type=='车位') {
+                        this.uNo = '升序'
+                        if (this.bNo == '' || this.floor == '' || this.horType == '') {
+                            alert('请设置排列')
+                        } else {
+                            let align = {
+                                bNo: this.bNo == '升序' ? 1 : 0,
+                                uNo: this.uNo == '升序' ? 1 : 0,
+                                floor: this.floor == '升序' ? 1 : 0,
+                                horType: this.horType == '升序' ? 1 : 0
+                            }
+                            let formData = {
+                                token: sessionStorage.getItem('token'),
+                                name: this.name,
+                                city: this.city,
+                                project: this.project,
+                                title: this.title,
+                                isLimited: this.isLimited,
+                                needSendSms: this.needSendSms,
+                                formalTime: JSON.stringify(this.formalTime),
+                                testTime: JSON.stringify(this.testTime),
+                                type: this.type == '房源' ? 0 : 1,
+                                align: JSON.stringify(align)
+                            }
+                            if (this.roomDesc) {
+                                formData.roomDesc = this.roomDesc
+                            }
+                            if (this.signDesc) {
+                                formData.signDesc = this.signDesc
+                            }
+                            console.log(JSON.stringify(formData))
+                            const options = {
+                                method: 'POST',
+                                headers: {
+                                    'content-type': 'application/json'
+                                },
+                                data: JSON.stringify(formData),
+                                url: config.preHttp + 'createActivity'
+                            }
+                            let self = this
+                            axios(options).then(response => {
+                                let data = response.data
+                                if (!data.errcode) {
+                                    self.errmsg = '创建成功'
+                                    self.toastDialog = true
+                                    setTime(function () {
+                                        self.toastDialog = false
+                                        self.$router.push('/home/addOpeningMenu')
+                                    }, 800)
+                                } else {
+                                    self.errmsg = `${data.errmsg}`
+                                    self.toastDialog = true
+                                }
+                            }).catch(error => {
+//              alert(error)
+                            })
+
+                        }
+                    }
+
                 }
             },
             formatDate(date) {
@@ -392,10 +469,10 @@
         },
         watch: {
             'type': function (newval, oldVal) {
-                this.bNo = '1'
-                this.uNo = '1'
-                this.floor = '1'
-                this.horType = '1'
+                this.bNo = ''
+                this.uNo = ''
+                this.floor = ''
+                this.horType = ''
             }
         }
     }

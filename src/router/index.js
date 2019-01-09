@@ -6,6 +6,7 @@ import AppHome from '@/views/AppHome'
 import CreateActivity from '@/views/CreateActivity'
 import CurrentMenuInfo from '@/views/CurrentMenuInfo'
 import AddOpeningMenu from '@/views/AddOpeningMenu'
+import EditActivity from '@/views/EditActivity'
 Vue.use(Router)
 
 export default new Router({
@@ -35,7 +36,12 @@ export default new Router({
           path: '/home/createActivity',
           name: '创建活动',
           component: CreateActivity
-        }
+        },
+          {
+              path: '/home/editActivity',
+              name: '修改活动',
+              component: EditActivity
+          }
       ]
     }
   ]

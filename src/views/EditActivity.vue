@@ -147,6 +147,20 @@
                                 v-model="activity.needSendSms"
                         ></v-switch>
                     </v-list-tile>
+                    <v-list-tile v-if="activity.needSign != null">
+                        <span style="width: 320px;text-align: left">是否需要签署协议: </span>
+                        <v-switch
+                                :label="activity.needSign ? '是': '否'"
+                                v-model="activity.needSign"
+                        ></v-switch>
+                    </v-list-tile>
+                    <v-list-tile v-else>
+                        <span style="width: 320px;text-align: left">是否需要签署协议: </span>
+                        <v-switch
+                                :label="needSign ? '是': '否'"
+                                v-model="needSign"
+                        ></v-switch>
+                    </v-list-tile>
                 </v-list>
                 <v-list style="margin-top: 0px;">
                     <v-list-tile><span
@@ -262,10 +276,10 @@
     export default {
         name: "edit-activity",
         data: () => ({
-            ddd: 2,
-            dialog: false,
-            valid: true,
-            alert: false,
+//            dialog: false,
+//            valid: true,
+//            alert: false,
+            needSign: false,
             dateTimeDialog: false,
             delTestTimeDialog: false,
             delTestTimeIndex: null,
@@ -276,7 +290,6 @@
             activityId: null,
             activityDialog: false,
             activity: null,
-            bNo_title: 'dddd',
             submitUpdateDialog: false,
             errmsg: '提示',
             toastDialog: false,
@@ -596,6 +609,12 @@
                     }
                 }
 
+                if(this.activity.needSign != null) {
+                    formData.needSign = this.activity.needSign
+                } else {
+                    formData.needSign = this.needSign
+                }
+
                 console.log(formData)
                 let self = this
                 const options = {
@@ -612,8 +631,11 @@
                         self.submitUpdateDialog = false
                         self.activityDialog = false
                         self.errmsg = '修改成功'
-                        self.$router.go(-1)
                         self.toastDialog = true
+                        setTimeout(function () {
+                            self.toastDialog = false
+                            self.$router.go(-1)
+                        }, 800)
                     } else {
                         self.errmsg = `${data.errmsg}`
                         self.toastDialog = true

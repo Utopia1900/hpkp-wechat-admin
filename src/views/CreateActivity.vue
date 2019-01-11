@@ -20,7 +20,7 @@
                 <label>3. 选择活动类型并设置列表的排列<span style="color: red">&nbsp;&nbsp;必选*</span></label>
             </div>
             <div style="margin-left: 5%">
-                <v-flex xs6 sm4 d-flex style="margin-left: 30px;">
+                <v-flex xs4 sm2 d-flex style="margin-left: 30px;">
                     <v-select
                             :items="items"
                             label="① 选择活动类型"
@@ -99,7 +99,7 @@
                 <textarea name="" id="signDesc" v-model="signDesc" cols="40" rows="5" placeholder="在这里填写..."></textarea>
             </div>
             <div>
-                <label>6. 是否限制一个账户只能购买一套房源<br/>(或：是否限制一个账户只能购买一个车位)</label>
+                <label>6. 是否限制一个账户只能购买一套房源(或：一个车位)</label>
             </div>
             <div style="margin-left: 5%">
                 <v-switch
@@ -116,8 +116,17 @@
                         v-model="needSendSms"
                 ></v-switch>
             </div>
+            <div>
+                <label>8. 是否需要签署协议</label>
+            </div>
+            <div style="margin-left: 5%">
+                <v-switch
+                        :label="needSign ? '是': '否'"
+                        v-model="needSign"
+                ></v-switch>
+            </div>
 
-            <label>8. 设置活动时间</label>
+            <label>9. 设置活动时间</label>
             <!--<h2>手风琴动画效果</h2>-->
             <div style="margin-left: 7%; text-align: left;margin-top: 15px;">
                 <span style="display: inline-block;border-left: 4px solid #ff7000;padding-left: 5px;">公测时间：</span>
@@ -195,6 +204,7 @@
                 signDesc: '',
                 isLimited: false,
                 needSendSms: false,
+                needSign: false,
                 testTime: [],
                 formalTime: {
                     start: '',
@@ -355,6 +365,7 @@
                                 title: this.title,
                                 isLimited: this.isLimited,
                                 needSendSms: this.needSendSms,
+                                needSign: this.needSign,
                                 formalTime: JSON.stringify(this.formalTime),
                                 testTime: JSON.stringify(this.testTime),
                                 type: this.type == '房源' ? 0 : 1,

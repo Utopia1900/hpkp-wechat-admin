@@ -28,7 +28,7 @@
                         <v-btn color="error" @click="showActivity(props.item)">查看&nbsp;|&nbsp;修改</v-btn>
                         <v-btn color="info" @click="addOpeningMenu(props.item.id)">添加开盘菜单</v-btn>
                         <v-btn color="success" @click="queryCheckUrl(props.item.id)">获取开盘菜单URL</v-btn>
-                        <v-btn color="warning" @click="goToManageActivity(props.item.id, props.item.name, props.item.type)">管理页面入口
+                        <v-btn color="warning" @click="goToManageActivity(props.item.id, props.item.name, props.item.type)">活动预览入口
                         </v-btn>
                     </td>
                 </template>
@@ -247,8 +247,8 @@
             },
             goToManageActivity (activityId, name, activityType) {
                 let token = sessionStorage.getItem('token')
-            //    window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin&activityType=${activityType}`, '_blank')
-                window.open(`/suAdmin/manage/#/?activityId=${activityId}&name=${name}&token=${token}&type=w-admin&activityType=${activityType}`, '_blank')
+//                window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&activityType=${activityType}`, '_blank')
+                window.open(`/admin/manage/#/?activityId=${activityId}&name=${name}&token=${token}&activityType=${activityType}`, '_blank')
             }
         },
         mounted() {

@@ -231,24 +231,10 @@
             updateActivity () {
                 this.submitUpdateDialog = true
             },
-            closeUpdateDialog () {
-                this.activityDialog = false
-//                this.queryValidActivity()
-            },
-            formatType (args) {
-                switch(args) {
-                    case 0:
-                        this.activity.type = '房源'
-                        break;
-                    case 1:
-                        this.activity.type = '车位'
-                        break;
-                }
-            },
             goToManageActivity (activityId, name, activityType) {
                 let token = sessionStorage.getItem('token')
-//                window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&activityType=${activityType}`, '_blank')
-                window.open(`/admin/manage/#/?activityId=${activityId}&name=${name}&token=${token}&activityType=${activityType}`, '_blank')
+                window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&activityType=${activityType}`, '_blank')
+ //               window.open(`/admin/manage/#/?activityId=${activityId}&name=${name}&token=${token}&activityType=${activityType}`, '_blank')
             }
         },
         mounted() {

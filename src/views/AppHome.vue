@@ -1,5 +1,6 @@
 <template>
   <v-app id="inspire">
+    <title>公众号管理后台</title>
     <app-header />
     <v-content>
       <router-view />

@@ -28,7 +28,7 @@
                         <v-btn color="error" @click="showActivity(props.item)">查看&nbsp;|&nbsp;修改</v-btn>
                         <v-btn color="info" @click="addOpeningMenu(props.item.id)">添加开盘菜单</v-btn>
                         <v-btn color="success" @click="queryCheckUrl(props.item.id)">获取开盘菜单URL</v-btn>
-                        <v-btn color="warning" @click="goToManageActivity(props.item.id, props.item.name, props.item.type)">活动预览入口
+                        <v-btn color="warning" @click="goToManageActivity(props.item.id, props.item.title, props.item.type)">活动预览入口
                         </v-btn>
                     </td>
                 </template>
@@ -231,10 +231,40 @@
             updateActivity () {
                 this.submitUpdateDialog = true
             },
-            goToManageActivity (activityId, name, activityType) {
+            goToManageActivity (activityId, activityTitle, activityType) {
                 let token = sessionStorage.getItem('token')
-                window.open(`http://localhost:8088/#/?activityId=${activityId}&name=${name}&token=${token}&activityType=${activityType}`, '_blank')
- //               window.open(`/admin/manage/#/?activityId=${activityId}&name=${name}&token=${token}&activityType=${activityType}`, '_blank')
+                const {href} = this.$router.resolve({
+                    name: 'manage'
+                })
+                if (token) {
+                    let formData = {
+                        token: token,
+                        activityId: activityId
+                    };
+                    let options = {
+                        method: "POST",
+                        headers: {
+                            "content-type": "application/json"
+                        },
+                        data: JSON.stringify(formData),
+                        url: config.preHttp + "getActivityToken"
+                    };
+                    axios(options)
+                        .then(response => {
+                            let data = response.data;
+                            if (!data.errcode) {
+                                window.sessionStorage.setItem("activityToken", data.token);
+                                window.sessionStorage.setItem("activityType", activityType)
+                                window.sessionStorage.setItem("activityTitle", activityTitle)
+                                window.open(href, '_blank')
+                            } else {
+                                alert(`${data.errmsg}`);
+                            }
+                        })
+                        .catch(error => {
+                            alert(error);
+                        });
+                }
             }
         },
         mounted() {

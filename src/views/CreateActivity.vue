@@ -347,6 +347,12 @@
         } else if (this.type === '') {
           this.toastDialog = true
           this.errmsg = '请选择活动类型'
+        } else if (this.formalTime.start === '' || this.formalTime.end === '') {
+          this.toastDialog = true
+          this.errmsg = '请设置正式时间'
+        } else if (this.testTime.start === '' || this.testTime.end === '') {
+          this.toastDialog = true
+          this.errmsg = '请设置公测时间'
         } else {
           let formData = {
             token: sessionStorage.getItem('token'),
